@@ -25,4 +25,9 @@ $app = require __DIR__.'/../bootstrap/app.php';
 |
 */
 
-$app->run();
+// For php -S localhost:8000 -t public/ 
+// Use 
+// $app->run();
+
+// Otherwise use
+$app->run($app->make('request'));
