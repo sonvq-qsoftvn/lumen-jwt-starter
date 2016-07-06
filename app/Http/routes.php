@@ -11,24 +11,28 @@
 |
 */
 
-$app->post('/auth/login', 'Auth\AuthController@postLogin');
+$app->group(['prefix' => 'api/v1'], function () use ($app) {
+    $app->post('/auth/login', 'App\Http\Controllers\Auth\AuthController@postLogin');    
 
-$app->group(['middleware' => 'jwt.auth'], function ($app) {
-    $app->get('/', function () use ($app) {
-        return [
-            'success' => [
-                'app' => $app->version(),
-            ],
-        ];
+
+    $app->group(['middleware' => 'jwt.auth', 'prefix' => 'api/v1/'], function ($app) {
+        $app->get('/version', function () use ($app) {
+            return [
+                'success' => [
+                    'app' => $app->version(),
+                ],
+            ];
+        });
+
+        $app->get('/user', function () use ($app) {
+            return [
+                'success' => [
+                    'user' => JWTAuth::parseToken()->authenticate(),
+                ],
+            ];
+        });
+
+        $app->get('/auth/invalidate', 'App\Http\Controllers\Auth\AuthController@getInvalidate');
     });
 
-    $app->get('/user', function () use ($app) {
-        return [
-            'success' => [
-                'user' => JWTAuth::parseToken()->authenticate(),
-            ],
-        ];
-    });
-
-    $app->get('/auth/invalidate', 'App\Http\Controllers\Auth\AuthController@getInvalidate');
 });
