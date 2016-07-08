@@ -11,6 +11,14 @@
 |
 */
 
+$app->get('/phpinfo', function () use ($app) {
+    echo phpinfo();
+});
+
+$app->get('api/cassandra', [
+    'as' => 'cassandra_index', 'uses' => 'CassandraController@index'
+]);
+
 $app->group(['prefix' => 'api/v1'], function () use ($app) {
     $app->post('/auth/login', 'App\Http\Controllers\Auth\AuthController@postLogin');    
 
