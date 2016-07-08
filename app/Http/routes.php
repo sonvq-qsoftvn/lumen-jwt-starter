@@ -15,7 +15,7 @@ $app->get('/phpinfo', function () use ($app) {
     echo phpinfo();
 });
 
-$app->get('api/cassandra', [
+$app->get('/cassandra', [
     'as' => 'cassandra_index', 'uses' => 'CassandraController@index'
 ]);
 

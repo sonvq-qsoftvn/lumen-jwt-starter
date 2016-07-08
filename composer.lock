@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9c49b896797dea82138e8b3c4aa8b22f",
-    "content-hash": "c78e78dfb2ec0ae3d4ed183e3fe94428",
+    "hash": "74ec15db8fc6d2da8e587388d4402945",
+    "content-hash": "cf8ced21449e40eeb4bb4754316d2ab2",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -73,6 +73,53 @@
                 "string"
             ],
             "time": "2015-11-06 14:35:42"
+        },
+        {
+            "name": "duoshuo/php-cassandra",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/duoshuo/php-cassandra.git",
+                "reference": "323613df9bd2505a11fe24dc8be22c2c77c0809d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/duoshuo/php-cassandra/zipball/323613df9bd2505a11fe24dc8be22c2c77c0809d",
+                "reference": "323613df9bd2505a11fe24dc8be22c2c77c0809d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cassandra\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Evseev Nikolay",
+                    "email": "evseevnn@gmail.com"
+                },
+                {
+                    "name": "Shen Zhenyu",
+                    "email": "zhenyupku@gmail.com"
+                }
+            ],
+            "description": "Cassandra client library for PHP, which support Protocol v3 and asynchronous request",
+            "keywords": [
+                "cassandra",
+                "cql",
+                "database",
+                "driver",
+                "nosql"
+            ],
+            "time": "2015-12-16 12:22:24"
         },
         {
             "name": "illuminate/auth",
@@ -3735,7 +3782,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "tymon/jwt-auth": 20,
-        "nannehuiges/jsend": 20
+        "nannehuiges/jsend": 20,
+        "duoshuo/php-cassandra": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

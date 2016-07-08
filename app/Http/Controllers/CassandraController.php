@@ -16,7 +16,7 @@ class CassandraController extends Controller {
 //        }
 //        return response()->json('success');
         $nodes = [
-            '127.0.0.1', // simple way, hostname only
+//            '127.0.0.1', // simple way, hostname only
 //            '192.168.0.2:9042', // simple way, hostname with port 
 //            [               // advanced way, array including username, password and socket options
 //                'host' => '10.205.48.70',
@@ -36,17 +36,17 @@ class CassandraController extends Controller {
 //                'timeout' => 30, // write/recv timeout, default 30, stream transport only
 //                'persistent' => true, // use persistent PHP connection, default false,  stream transport only  
 //            ],
-//            [               // advanced way, using SSL
-//                'class' => 'Cassandra\Connection\Stream', // "class" must be defined as "Cassandra\Connection\Stream" for ssl or tls
-//                'host' => 'ssl://10.205.48.70', // or 'tls://10.205.48.70'
-//                'port' => 9042,
-//                'username' => 'admin',
-//                'password' => 'pass',
-//            ],
+            [               // advanced way, using SSL
+                'class' => 'Cassandra\Connection\Stream', // "class" must be defined as "Cassandra\Connection\Stream" for ssl or tls
+                'host' => '172.16.10.51', // or 'tls://10.205.48.70'
+                'port' => 9042,
+//                'username' => 'cassandra',
+//                'password' => 'cassandra',
+            ],
         ];
 
         // Create a connection.
-        $connection = new Cassandra\Connection($nodes, 'demo_1467444215_ccc3b7d0a20403e99e2b330249dcc115');
+        $connection = new Cassandra\Connection($nodes, 'mykeyspace');
 
         //Connect
         try {
@@ -63,7 +63,7 @@ class CassandraController extends Controller {
         // Run query synchronously.
         try {
             
-            $response = $connection->querySync('SELECT * FROM "users" WHERE "lastname" = ?', [new Cassandra\Type\Varchar('Doe')]);
+            $response = $connection->querySync('SELECT * FROM "users"');
             $value = $response->fetchOne(); 
             var_dump($response);die;
             return $response;
