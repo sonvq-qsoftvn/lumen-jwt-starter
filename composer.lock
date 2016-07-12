@@ -1445,16 +1445,16 @@
         },
         {
             "name": "namshi/jose",
-            "version": "7.1.0",
+            "version": "7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/namshi/jose.git",
-                "reference": "5e74d1b5e3d7ba92c62e4ee1d24bdce37ecc10a4"
+                "reference": "01e5caac098d2b6999a3eb2f8c7f092e958c5931"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/namshi/jose/zipball/5e74d1b5e3d7ba92c62e4ee1d24bdce37ecc10a4",
-                "reference": "5e74d1b5e3d7ba92c62e4ee1d24bdce37ecc10a4",
+                "url": "https://api.github.com/repos/namshi/jose/zipball/01e5caac098d2b6999a3eb2f8c7f092e958c5931",
+                "reference": "01e5caac098d2b6999a3eb2f8c7f092e958c5931",
                 "shasum": ""
             },
             "require": {
@@ -1504,7 +1504,7 @@
                 "jwt",
                 "token"
             ],
-            "time": "2016-04-11 11:41:52"
+            "time": "2016-07-09 11:02:28"
         },
         {
             "name": "nannehuiges/jsend",

@@ -15,6 +15,26 @@ $app->get('/phpinfo', function () use ($app) {
     echo phpinfo();
 });
 
+$app->get('/test', function () use ($app) {
+    $cluster   = Cassandra::cluster()                 // connects to localhost by default
+                ->withContactPoints('172.16.10.51')
+                ->withCredentials("cassandra", "cassandra")
+                ->withPort(9042)
+                ->build();
+    $keyspace  = 'mykeyspace';
+    $session   = $cluster->connect($keyspace);        // create session, optionally scoped to a keyspace
+    $statement = new Cassandra\SimpleStatement(       // also supports prepared and batch statements
+        'SELECT * from users'
+    );
+    $future    = $session->executeAsync($statement);  // fully asynchronous and easy parallel execution
+    $result    = $future->get();                      // wait for the result, with an optional timeout
+
+    foreach ($result as $row) {                       // results and rows implement Iterator, Countable and ArrayAccess
+        echo '<pre>';
+        var_dump($row);
+    }
+});
+
 $app->get('/cassandra', [
     'as' => 'cassandra_index', 'uses' => 'CassandraController@index'
 ]);

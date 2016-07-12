@@ -38,15 +38,15 @@ class CassandraController extends Controller {
 //            ],
             [               // advanced way, using SSL
                 'class' => 'Cassandra\Connection\Stream', // "class" must be defined as "Cassandra\Connection\Stream" for ssl or tls
-                'host' => '172.16.10.51', // or 'tls://10.205.48.70'
+                'host' => '172.16.10.88', // or 'tls://10.205.48.70'
                 'port' => 9042,
-//                'username' => 'cassandra',
-//                'password' => 'cassandra',
+                'username' => 'cassandra',
+                'password' => 'cassandra',
             ],
         ];
 
         // Create a connection.
-        $connection = new Cassandra\Connection($nodes, 'mykeyspace');
+        $connection = new Cassandra\Connection($nodes, 'videodb');
 
         //Connect
         try {
