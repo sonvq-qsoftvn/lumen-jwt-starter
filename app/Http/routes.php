@@ -15,7 +15,7 @@ $app->get('/phpinfo', function () use ($app) {
     echo phpinfo();
 });
 
-$app->get('/test', function () use ($app) {
+$app->get('/cassandra-connect', function () use ($app) {
     $cluster   = Cassandra::cluster()                 // connects to localhost by default
                 ->withContactPoints('172.16.10.51')
                 ->withCredentials("cassandra", "cassandra")
@@ -34,10 +34,6 @@ $app->get('/test', function () use ($app) {
         var_dump($row);
     }
 });
-
-$app->get('/cassandra', [
-    'as' => 'cassandra_index', 'uses' => 'CassandraController@index'
-]);
 
 $app->group(['prefix' => 'api/v1'], function () use ($app) {
     $app->post('/auth/login', 'App\Http\Controllers\Auth\AuthController@postLogin');    
