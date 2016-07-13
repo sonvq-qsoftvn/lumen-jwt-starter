@@ -17,8 +17,13 @@ $app->group(['prefix' => 'api/v1'], function () use ($app) {
         echo phpinfo();
     });
 
-    $app->get('/videos', 'App\Http\Controllers\VideoController@index');
-
+    $app->get('/videos', ['as' => 'videos_index', 'uses' => 'App\Http\Controllers\VideoController@index']);
+    $app->get('/videos/{id}', ['as' => 'videos_show', 'uses' => 'App\Http\Controllers\VideoController@show']);
+    $app->post('/videos', ['as' => 'videos_store', 'uses' => 'App\Http\Controllers\VideoController@store']);
+    $app->put('/videos/{id}', ['as' => 'videos_update', 'uses' => 'App\Http\Controllers\VideoController@update']);
+    $app->delete('/videos/{id}', ['as' => 'videos_destroy', 'uses' => 'App\Http\Controllers\VideoController@destroy']);
+    $app->delete('/videos', ['as' => 'videos_delete', 'uses' => 'App\Http\Controllers\VideoController@delete']);
+    
     $app->post('/auth/login', 'App\Http\Controllers\Auth\AuthController@postLogin');    
     
 
