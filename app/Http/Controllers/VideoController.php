@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseCassandraController;
-use \Cassandra\SimpleStatement as SimpleStatement;
 
 class VideoController extends BaseCassandraController {
 
     protected $_keyspace = 'videodb';
     protected $_table = 'videos';
+    protected $_plular = 'videos';
+    protected $_singular = 'video';
 
     public function index() {
         $statement = new SimpleStatement(
@@ -34,12 +35,18 @@ class VideoController extends BaseCassandraController {
         $statement = $this->_session->prepare(
                 "SELECT * FROM $this->_table WHERE videoid = ?"
         );
-        
-        $queryResult = $this->session->execute($statement, new Cassandra\ExecutionOptions(array(
-            'arguments' => array(new Cassandra\Uuid($id))
+
+        $queryResult = $this->_session->execute($statement, new ExecutionOptions(array(
+            'arguments' => array(new Uuid($id))
         )));
-        
-        var_dump($queryResult);
+
+        $result = array();
+        foreach ($queryResult as $row) {
+            $result[$this->_singular] = $row;
+        }
+        return [
+            'success' => $result,
+        ];
     }
 
 }
