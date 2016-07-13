@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use \Cassandra as Cassandra;
-use \Cassandra\SimpleStatement as SimpleStatement;
-use \Cassandra\ExecutionOptions as ExecutionOptions;
-use \Cassandra\Uuid as Uuid;
 
 class BaseCassandraController extends Controller {
 

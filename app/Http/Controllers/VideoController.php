@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseCassandraController;
+use \Cassandra\SimpleStatement as SimpleStatement;
+use \Cassandra\ExecutionOptions as ExecutionOptions;
+use \Cassandra\Uuid as Uuid;
 
 class VideoController extends BaseCassandraController {
 
