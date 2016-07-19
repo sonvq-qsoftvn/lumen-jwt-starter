@@ -1,8 +1,9 @@
 httpd:
-  restart: always
-  build: ./dockerbuild/httpd
-  volumes:
-    - ".:/var/www/html"
-  ports:
-    - "80:80"
-    - "443:443"
+    restart: always
+    build: ./dockerbuild/httpd
+    volumes:
+        - ".:/var/www/html"
+    ports:
+        - "80:80"
+        - "443:443"
+    tty: true    
