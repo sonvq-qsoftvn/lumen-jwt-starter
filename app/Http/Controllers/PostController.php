@@ -29,8 +29,8 @@ class PostController extends BaseApiController {
 
         $result = array();
         $faker = Faker::create('vi_VN');
-
-        for ($i = 0; $i < 10; $i++) {
+        $count = empty($query['limit']) ? 10 : $query['limit'];
+        for ($i = 0; $i < $count; $i++) {
             $post = new Post();
             $postContent = new PostContent();
             
