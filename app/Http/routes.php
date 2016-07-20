@@ -11,8 +11,27 @@
 |
 */
 
+/*
+ * A base restful api function to generate route base on action 
+ * Included actions are index, show, store, update, destroy
+ */
+function baseRestAPI($path, $controller) {
+    global $app;
+
+    $app->get($path, $controller . '@index');
+    $app->get($path . '/{id}', $controller . '@show');
+    $app->post($path, $controller . '@store');
+    $app->put($path . '/{id}', $controller . '@update');
+    $app->delete($path . '/{id}', $controller . '@destroy');
+}
+
+
+
 $app->group(['prefix' => 'api/v1'], function () use ($app) {
     
+    baseRestAPI('posts', 'App\Http\Controllers\PostController');
+    
+    // GET PHP Info from server
     $app->get('/phpinfo', function () use ($app) {
         echo phpinfo();
     });
