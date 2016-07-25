@@ -7,15 +7,6 @@ use Illuminate\Support\Facades\Request as RequestSupport;
 
 class BaseApiController extends Controller {
 
-    /**
-     * Create a new database connection instance.
-     *
-     * 
-     */
-    public function __construct() {
-        
-    }
-
     protected function responseFormat($result = null, $error_message = null, $message = null) {
         
         return [
