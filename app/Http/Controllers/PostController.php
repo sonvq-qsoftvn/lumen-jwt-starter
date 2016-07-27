@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseApiController;
-use App\Model\Post;
+use App\Model\Repository\PostRepository;
 
 class PostController extends BaseApiController {
     
-    protected $model = 'App\Model\Post';
+    protected $repository = 'App\Model\Repository\PostRepository';
 
     /*
      * GET /objects
@@ -18,11 +18,10 @@ class PostController extends BaseApiController {
     public function index() {
         $query = $this->processInput();
         
-        $model = new $this->model;
+        $repository = new $this->repository;
 
-        $result = $model->getAll($query['where'], $query['sort'], $query['limit'], $query['offset']);
+        $result = $repository->getAll($query['where'], $query['sort'], $query['limit'], $query['offset']);
         
-
         // TODO: optimize
         foreach ($result as &$object) {  
            

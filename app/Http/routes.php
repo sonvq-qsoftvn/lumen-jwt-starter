@@ -29,6 +29,7 @@ function baseRestAPI($path, $controller) {
 
 $app->group(['prefix' => 'api/v1'], function () use ($app) {
     
+    baseRestAPI('feeds', 'App\Http\Controllers\FeedController');
     baseRestAPI('posts', 'App\Http\Controllers\PostController');
     
     // GET PHP Info from server
