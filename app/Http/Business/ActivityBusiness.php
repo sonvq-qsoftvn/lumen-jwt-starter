@@ -12,27 +12,30 @@ use App\Model\Repository\UserRepository;
 use App\Model\Repository\PostRepository;
 
 class ActivityBusiness  {   
-    public function createObject($inputArray) {
+    public function createObject($inputArray, $type) {
         $arrayActivity = array();
+        
         foreach ($inputArray as $singleArray) {
-            switch ($singleArray['activity_type']) {
+            switch ($type) {
                 case 'Create':                    
                     $createAction = new Create();
                      
                     // Get Actor for Create action
-                    if (isset($singleArray['user_id'])) {
+                    if (isset($singleArray['author_id'])) {
                         $userRepository = new UserRepository();
-                        $user = $userRepository->getById($singleArray['user_id']);                    
-                        $actorBusiness = new ActorBusiness();
-                        $createAction->set_actor($actorBusiness->createObject($user, 'Person'));
+                        $user = $userRepository->getById($singleArray['author_id']); 
+                        
+                        if (!empty($user)) {
+                            $actorBusiness = new ActorBusiness();
+                            $createAction->set_actor($actorBusiness->createObject($user, 'Person'));
+                        }                        
                     }
-                
-                    if(isset($singleArray['activity_id'])) {
-                        var_dump($singleArray);die;
-                        $postRepository = new PostRepository();                        
-                        $post = $postRepository->getById($singleArray['activity_id']);                        
-                        $objectBusiness = new ObjectBusiness();
-                        $createAction->set_object($objectBusiness->createObject($post, 'Article'));
+
+                    $objectBusiness = new ObjectBusiness();
+                    $createAction->set_object($objectBusiness->createObject($singleArray, 'Article'));                    
+                    
+                    if (isset($singleArray['date_created']) && $singleArray['date_created']) {
+                        $createAction->set_published($singleArray['date_created']);
                     }
                     
                     $arrayActivity[] = $createAction->toArray();

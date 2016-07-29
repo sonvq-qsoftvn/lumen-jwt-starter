@@ -29,8 +29,8 @@ function baseRestAPI($path, $controller) {
 
 $app->group(['prefix' => 'api/v1'], function () use ($app) {
     
-    baseRestAPI('feeds', 'App\Http\Controllers\FeedController');
     baseRestAPI('posts', 'App\Http\Controllers\PostController');
+    $app->get('posts-new', 'App\Http\Controllers\PostController@newposts'); 
     
     // GET PHP Info from server
     $app->get('/phpinfo', function () use ($app) {
@@ -38,9 +38,10 @@ $app->group(['prefix' => 'api/v1'], function () use ($app) {
     });
     
     $app->post('/auth/login', 'App\Http\Controllers\Auth\AuthController@postLogin');    
-    
 
     $app->group(['middleware' => 'jwt.auth', 'prefix' => 'api/v1/'], function ($app) {
+        
+        
         $app->get('/version', function () use ($app) {
             return [
                 'success' => [

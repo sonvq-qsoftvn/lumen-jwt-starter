@@ -8,7 +8,8 @@ class OrderedCollection extends Collection {
 
     protected $type = 'OrderedCollection';
     protected $orderedItems;
-    protected $fillable = ['type', 'totalItems', 'orderedItems'];
+    protected $serverRequestTime;
+    protected $fillable = ['type', 'totalItems', 'orderedItems', 'serverRequestTime'];
 
     public function get_orderedItems() {
         return $this->orderedItems;
@@ -18,11 +19,22 @@ class OrderedCollection extends Collection {
         $this->orderedItems = $orderedItems;
         return $this;
     }
+    
+    public function get_serverRequestTime() {
+        return $this->serverRequestTime;
+    }
 
-    public function fillData($arrayItem) {
+    public function set_serverRequestTime($serverRequestTime) {
+        $this->serverRequestTime = $serverRequestTime;
+        return $this;
+    }
+
+    public function fillData($arrayItem, $serverTime) {
+        
         $this->set_totalItems(count($arrayItem));
         $this->set_orderedItems($arrayItem);
-
+        $this->set_serverRequestTime($serverTime);
+        
         return $this;
     }
 

@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Request as RequestSupport;
 
 class BaseApiController extends Controller {
 
-    protected function responseFormat($result = null, $error_message = null, $message = null) {
+    protected function responseFormat($result = null, $errorCode = null, $message = null) {
         
         return [
-            'error_message' => $error_message,
+            'errorCode' => $errorCode,
             'message' => $message,
             'result' => $result
         ];

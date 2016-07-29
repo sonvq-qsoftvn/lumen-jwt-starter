@@ -16,6 +16,9 @@ class FeedController extends BaseApiController {
      * Get all feeds
      */
     public function index() {
+//        $user = \JWTAuth::parseToken()->toUser();
+//        $userId = $user->getKey();
+        
         $query = $this->processInput();
         
         // Return an orderedCollection

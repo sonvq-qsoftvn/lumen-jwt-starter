@@ -6,14 +6,17 @@ use \Cassandra as Cassandra;
 use \Cassandra\SimpleStatement as SimpleStatement;
 use \Cassandra\ExecutionOptions as ExecutionOptions;
 use \Cassandra\Uuid as Uuid;
+use \Cassandra\Timestamp as Timestamp;
 
 class BaseRepository
 {    
     protected $_session;
+    protected $_primaryKey;
           
     protected function connectDatabase() {
         
         $cluster = Cassandra::cluster();
+        $cluster = $cluster->withDefaultPageSize(null);
         
         $host = env('DB_CASSANDRA_HOST');
         if (isset($host) && !empty($host)) {            
@@ -55,6 +58,9 @@ class BaseRepository
      */
     public function __construct() {
         $this->connectDatabase();
+        if (!isset($this->_primaryKey) && !is_array($this->_primaryKey)) {
+            $this->_primaryKey = $this->_table. "_id";
+        }
     }
     
     protected function simpleArrayMapping(array $result = array(), $list = true) {
@@ -84,23 +90,55 @@ class BaseRepository
                         $simpledArray[$key] = $value->__toString();
                         break;
                     case 'Cassandra\Timestamp':
-                        $simpledArray[$key] = $value->__toString();
+                        $returnValue = $value->__toString();
+                        if(strlen($returnValue) > 10) {
+                            $returnValue = substr($returnValue, 0, 10);
+                        }
+                        $simpledArray[$key] = $returnValue;
                         break;
                     case 'Cassandra\Timeuuid':
                         $simpledArray[$key] = $value->time();                        
                         break;
                     case 'Cassandra\Set':
                         // TODO
-                        //die('todo Cassandra\Set');
-//                        $valueInSet = $value->values();
-//                        var_dump($valueInSet);
+                        $valueInSet = $value->values();
+                        $arrayValue = array();
+                        if (count($valueInSet) > 0) {
+                            foreach ($valueInSet as $singleKey => $singleValue) {
+                                if(!is_object($singleValue)) {
+                                    $arrayValue[] = $singleValue;
+                                } else {                                    
+                                    $arrayValue[] = $singleValue->__toString();      
+                                }
+                            }
+                        }
+                        $simpledArray[$key] = $arrayValue;                        
                         break;
-                    case 'Cassandra\UserTypeValue';
+                    case 'Cassandra\UserTypeValue':
+                        switch ($key) {
+                            case 'address':
+                                
+                                break;
+                            case 'location':
+                                $arrayLocation = array();
+                                $locationArr = $value->values();
+                                foreach ($locationArr as $subkey => $subvalue) {
+                                    if (is_object($subvalue)) {
+                                        $arrayLocation[$subkey] = $subvalue->__toString();
+                                    } else {
+                                        $arrayLocation[$subkey] = $subvalue;
+                                    }
+                                }
+                                $simpledArray[$key] = $arrayLocation; 
+                                break;
+                            case 'phone':
+                                break;
+                        }
                         // TODO
-                        //die('todo Cassandra\UserTypeValue');
+                        //var_dump('todo Cassandra\UserTypeValue');die;
                         break;
                     default:
-                        break;
+                        break;                                        
                 }
             } else {
                 $simpledArray[$key] = $value;
@@ -114,14 +152,14 @@ class BaseRepository
         
         $statement = new SimpleStatement(
             "SELECT * from $this->_table"
-        );
+        );       
 
-        $future = $this->_session->executeAsync($statement);
-        $queryResult = $future->get();
+        $queryResult = $this->_session->execute($statement);
+        
         $result = array();
 
         foreach ($queryResult as $row) {
-            $result[] = $row;            
+            $result[] = $row;   
         }
         
         $processedResult = $this->simpleArrayMapping($result);
@@ -130,18 +168,54 @@ class BaseRepository
     }    
     
     public function getById ($id, array $where = array(), array $sort = array(), $limit = 10, $offset = 0) {
-        $statement = $this->_session->prepare(
-            "SELECT * FROM $this->_table WHERE " . $this->_table. "_id = ?"
-        );
+        if (!is_array($this->_primaryKey)) {                        
+            $statement = $this->_session->prepare(
+                "SELECT * FROM $this->_table WHERE " . $this->_primaryKey . " = ?"
+            );
 
-        $queryResult = $this->_session->execute($statement, new ExecutionOptions(array(
-            'arguments' => array(new Uuid($id))
-        )));
+            $queryResult = $this->_session->execute($statement, new ExecutionOptions(array(
+                'arguments' => array(new Uuid($id))
+            )));
+        } else {
+            $queryString = '';
+            $length = count($this->_primaryKey);
+            $counter = 0;
+            $arrayArguments = array();
+            
+            foreach ($this->_primaryKey as $key => $value) {
+                $queryString = $queryString . $key . ' = ?';
+                if ($counter < $length - 1) {
+                    $queryString .= ' and ';
+                }
+                switch ($value) {
+                    case 'Uuid':
+                        $arrayArguments[] = new Uuid($id[$counter]);
+                        break;
+                    case 'Timestamp':
+                        $arrayArguments[] = new Timestamp($id[$counter]);
+                        break;
+                }
+                
+                $counter++;
+                
+            }
+            $statement = $this->_session->prepare(
+                "SELECT * FROM $this->_table WHERE " . $queryString
+            );
+                       
+            $queryResult = $this->_session->execute($statement, new ExecutionOptions(array(
+                'arguments' => $arrayArguments
+            )));
+        }
+        
 
         
         $result = $queryResult->first();
-        
-        $processedResult = $this->simpleArrayMapping($result, false);
+                
+        $processedResult = null;
+        if (!empty($result)) {
+            $processedResult = $this->simpleArrayMapping($result, false);
+        }
         
         return $processedResult;
     }
