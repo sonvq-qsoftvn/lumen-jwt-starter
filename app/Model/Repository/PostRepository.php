@@ -67,7 +67,6 @@ class PostRepository extends BaseRepository
     } 
     
     public function getAllByFollowing (array $userIdArray = array(), $startTime = null, $endTime = null) {
-                
         $sqlQuery = "SELECT * FROM $this->_table WHERE author_id IN (" . implode(', ', $userIdArray) . ")";
         
         if ($startTime != null) {
@@ -79,8 +78,7 @@ class PostRepository extends BaseRepository
             $endTime = Helper::timestampSecondsToMilliseconds($endTime);
             $sqlQuery .= " and date_created <= $endTime ";            
         }
-        
-        $sqlQuery .= 'ORDER BY date_created desc';
+
         $statement = $this->_session->prepare($sqlQuery);
            
         $queryResult = $this->_session->execute($statement);

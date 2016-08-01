@@ -41,33 +41,33 @@ class PostController extends BaseApiController {
         $followingList = $followingRepository->getById($input['user_id']);
         
         if(empty($followingList)) {
-            $orderedPosts->fillData(array(), $serverTime);
+            $arrayFollowingId = array();
         } else {
-            $arrayFollowingId = $followingList['followings'];     
-            $arrayFollowingId[] = $input['user_id'];
+            $arrayFollowingId = $followingList['followings'];                 
+        }
+        $arrayFollowingId[] = $input['user_id'];
             
-            $query = $this->processInput();
+        $query = $this->processInput();
 
-            $repository = new $this->repository;
+        $repository = new $this->repository;
 
-            $postList = $repository->getAllByFollowing($arrayFollowingId, null, $queryTime);
+        $postList = $repository->getAllByFollowing($arrayFollowingId, null, $queryTime);
 
-            $activityBusiness = new ActivityBusiness();
-            $arrayActivity = $activityBusiness->createObject($postList, 'Create');
+        $activityBusiness = new ActivityBusiness();
+        $arrayActivity = $activityBusiness->createObject($postList, 'Create');
 
-            $orderedPosts->fillData($arrayActivity, $serverTime);
+        $orderedPosts->fillData($arrayActivity, $serverTime);
 
 
-            // TODO: optimize
-            foreach ($orderedPosts as &$object) {  
+        // TODO: optimize
+        foreach ($orderedPosts as &$object) {  
 
-                if (!empty($query['fields'])) {
-                    foreach ($object as $key => $value) {
-                        if (in_array($key, $query['fields'])) {
-                            continue;
-                        } else {                             
-                            unset($object[$key]);                        
-                        }
+            if (!empty($query['fields'])) {
+                foreach ($object as $key => $value) {
+                    if (in_array($key, $query['fields'])) {
+                        continue;
+                    } else {                             
+                        unset($object[$key]);                        
                     }
                 }
             }
@@ -100,40 +100,41 @@ class PostController extends BaseApiController {
         
         // Get follow list of user_id
         $followingRepository = new FollowingRepository();
-        $followingList = $followingRepository->getById($input['user_id']);
+        $followingList = $followingRepository->getById($input['user_id']);                
         
         if(empty($followingList)) {
-            $orderedPosts->fillData(array(), $serverTime);
+            $arrayFollowingId = array();
         } else {
-            $arrayFollowingId = $followingList['followings'];     
-            $arrayFollowingId[] = $input['user_id'];
-            
-            $query = $this->processInput();
+            $arrayFollowingId = $followingList['followings'];                 
+        }
+        $arrayFollowingId[] = $input['user_id'];
+        
+        $query = $this->processInput();
 
-            $repository = new $this->repository;
+        $repository = new $this->repository;
 
-            $postList = $repository->getAllByFollowing($arrayFollowingId, $input['time_end'], $serverTime);
+        $postList = $repository->getAllByFollowing($arrayFollowingId, $input['time_end'], $serverTime);
 
-            $activityBusiness = new ActivityBusiness();
-            $arrayActivity = $activityBusiness->createObject($postList, 'Create');
+        $activityBusiness = new ActivityBusiness();
+        $arrayActivity = $activityBusiness->createObject($postList, 'Create');
 
-            $orderedPosts->fillData($arrayActivity, $serverTime);
+        $orderedPosts->fillData($arrayActivity, $serverTime);
 
 
-            // TODO: optimize
-            foreach ($orderedPosts as &$object) {  
+        // TODO: optimize
+        foreach ($orderedPosts as &$object) {  
 
-                if (!empty($query['fields'])) {
-                    foreach ($object as $key => $value) {
-                        if (in_array($key, $query['fields'])) {
-                            continue;
-                        } else {                             
-                            unset($object[$key]);                        
-                        }
+            if (!empty($query['fields'])) {
+                foreach ($object as $key => $value) {
+                    if (in_array($key, $query['fields'])) {
+                        continue;
+                    } else {                             
+                        unset($object[$key]);                        
                     }
                 }
             }
         }
+        
         
         return response()->json($this->responseFormat($orderedPosts->toArray()), 200);     
     }
@@ -148,6 +149,16 @@ class PostController extends BaseApiController {
         
         if ($input)
         {
+            if (! (isset($input['actor']['id']) && $input['actor']['id']))
+            {
+                return response()->json($this->responseFormat(null, 'missing_parameters', 'Required Actor!'));
+            }
+
+            if (! (isset($input['object']['content']) && $input['object']['content']))
+            {
+                return response()->json($this->responseFormat(null, 'missing_parameters', 'Require content!'));
+            }
+
             $type_action = isset($input['type']) ? $input['type'] : 'Create';
             $type = isset($input['object']['type']) ? $input['object']['type'] : 'Article';
             $content = isset($input['object']['content']) ? $input['object']['content'] : '';
