@@ -44,7 +44,7 @@ class BaseRepository
         
         try {
             $this->_session = $cluster->connect($keyspace);
-        } catch (Exception $ex) {
+        } catch (Exception $ex) {            
             echo $ex->getMessage();
             exit();
         }

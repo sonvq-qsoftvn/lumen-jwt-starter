@@ -29,7 +29,7 @@ class_exists('JWTAuth') or class_alias(Tymon\JWTAuth\Facades\JWTAuth::class, 'JW
 class_exists('JWTFactory') or class_alias(Tymon\JWTAuth\Facades\JWTFactory::class, 'JWTFactory');
 
 $app->withEloquent();
-
+$app->configure('mail');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -92,14 +92,14 @@ $app->routeMiddleware([
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+ $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
 // JWTAuth
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
-
+$app->register(Illuminate\Mail\MailServiceProvider::class);  
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

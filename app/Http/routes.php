@@ -37,6 +37,8 @@ $app->group(['prefix' => 'api/v1'], function () use ($app) {
         echo phpinfo();
     });
     
+    $app->get('/mail', 'App\Http\Controllers\MailController@send');
+    
     $app->post('/auth/login', 'App\Http\Controllers\Auth\AuthController@postLogin');    
 
     $app->group(['middleware' => 'jwt.auth', 'prefix' => 'api/v1/'], function ($app) {

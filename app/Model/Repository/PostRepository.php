@@ -79,6 +79,7 @@ class PostRepository extends BaseRepository
             $sqlQuery .= " and date_created <= $endTime ";            
         }
 
+        $sqlQuery .= 'ORDER BY date_created desc';
         $statement = $this->_session->prepare($sqlQuery);
            
         $queryResult = $this->_session->execute($statement);
